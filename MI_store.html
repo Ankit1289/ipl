@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mumbai Indians Store</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background: #f5f5f5; color: #222; }
+
+    /* Header */
+    header {
+      background: linear-gradient(90deg, #001f3f, #003366);
+      color: white; display: flex; justify-content: space-between; align-items: center;
+      padding: 15px 30px; position: sticky; top: 0; z-index: 1000;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo img { width: 50px; }
+    .logo h1 { font-size: 1.5rem; color: #ffd700; }
+    nav ul { display: flex; list-style: none; gap: 20px; }
+    nav ul li a { text-decoration: none; color: white; font-weight: bold; transition: color 0.3s; }
+    nav ul li a:hover { color: #ffd700; }
+
+    /* Store Section */
+    .store { padding: 40px 20px; text-align: center; }
+    .store h2 { font-size: 2rem; margin-bottom: 20px; color: #003366; }
+    .products {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px; padding: 20px;
+    }
+    .card {
+      background: white; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      overflow: hidden; transition: transform 0.3s;
+    }
+    .card:hover { transform: scale(1.05); }
+    .card img { width: 100%; height: 200px; object-fit: cover; }
+    .card h3 { margin: 10px 0; font-size: 1.2rem; color: #001f3f; }
+    .card p { font-size: 1rem; margin: 5px 0; color: #444; }
+    .card button {
+      margin: 10px 5px; padding: 10px 15px; border: none; background: #ffd700;
+      color: #001f3f; font-weight: bold; cursor: pointer; border-radius: 6px; transition: background 0.3s;
+    }
+    .card button:hover { background: #ffcc00; }
+
+    /* Cart */
+    .cart {
+      padding: 30px 20px; background: #fff; max-width: 700px; margin: 30px auto;
+      border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .cart h2 { text-align: center; color: #003366; margin-bottom: 20px; }
+    .cart-items { list-style: none; padding: 0; margin: 0; }
+    .cart-items li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px; border-bottom: 1px solid #ddd;
+    }
+    .cart-items li:last-child { border-bottom: none; }
+    .cart-buttons { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+    .cart-buttons button {
+      padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;
+    }
+    .remove-btn { background: red; color: white; }
+    .remove-btn:hover { background: darkred; }
+    .qty-btn { background: #003366; color: white; }
+    .qty-btn:hover { background: #001f3f; }
+    .checkout-btn { background: green; color: white; }
+    .checkout-btn:hover { background: darkgreen; }
+    .clear-btn { background: orange; color: white; }
+    .clear-btn:hover { background: darkorange; }
+    .cart-total { text-align: right; margin-top: 15px; font-size: 1.2rem; font-weight: bold; color: #001f3f; }
+
+    /* Footer */
+    footer { background: #001f3f; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+    footer .socials { margin-top: 10px; }
+    footer .socials a { margin: 0 10px; text-decoration: none; color: #ffd700; font-weight: bold; }
+
+
+    /* Contact Section */
+.contact-section {
+  max-width: 1200px;
+  margin: auto;
+  background-color: #14aad4;
+  padding: 40px;
+  margin-top: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1.2s ease-out both;
+}
+
+.contact-section h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333333;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  font-weight: 600;
+  color: #444;
+}
+
+input, textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  width: 100%;
+  resize: vertical;
+}
+
+button {
+  background-color: #6200ea;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #4500b5;
+}
+
+
+
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav ul { display: none; flex-direction: column; background: #003366; position: absolute;
+        top: 60px; right: 0; width: 200px; padding: 10px; }
+      nav ul.show { display: flex; }
+      .menu-toggle { display: block; font-size: 1.5rem; cursor: pointer; }
+    }
+    @media (min-width: 769px) { .menu-toggle { display: none; } }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="LogoMakr-6vWAEi.png" alt="MI Logo">
+      <h1>MI Store</h1>
+    </div>
+    <span class="menu-toggle" onclick="toggleMenu()">☰</span>
+    <nav>
+      <ul id="nav-links">
+        <li><a href="IPL_SITE.html">Home</a></li>
+        <li><a href="#">Jerseys</a></li>
+        <li><a href="#">Caps</a></li>
+        <li><a href="#">Accessories</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Store -->
+  <section class="store">
+    <h2>Official Mumbai Indians Merchandise</h2>
+    <div class="products">
+      <div class="card">
+        <img src="store /jersey.jpg" alt="MI Jersey">
+        <h3>MI Jersey 2025</h3>
+        <p>₹1499 <br> <br>Iconic blue with golden accents, symbolizing Mumbai’s spirit and pride.
+        </p>
+        <button onclick="addToCart('MI Jersey 2025', 1499)">Add to Cart</button>
+      </div>
+      <div class="card">
+        <img src="store /jersy kid.webp" alt="MI Cap">
+        <h3>MI Cap</h3>
+        <p>₹1199 <br><br>Iconic blue with golden accents, symbolizing Mumbai’s spirit and pride.</p>
+        <button onclick="addToCart('MI Cap', 499)">Add to Cart</button>
+      </div>
+      <div class="card">
+        <img src="store /cap 2.jpeg" alt="MI Mug">
+        <h3>MI Cap</h3>
+        <p>₹299 <br><br>Signature MI blue with embroidered logo, perfect for everyday wear</p>
+        <button onclick="addToCart('MI Coffee Mug', 299)">Add to Cart</button>
+      </div>
+      <div class="card">
+        <img src="store /cup 3.jpg" alt="MI Mug">
+        <h3>MI Coffee Mug</h3>
+        <p>₹150 <br><br>Start your day with team spirit in every sip.</p>
+        <button onclick="addToCart('MI Coffee Mug', 299)">Add to Cart</button>
+      </div>
+      
+      <div class="card">
+        <img src="store /cup.png" alt="MI Mug">
+        <h3>MI Coffee Mug</h3>
+        <p>₹299 <br><br>Comfortable polyester lowers with MI branding.</p>
+        <button onclick="addToCart('MI Coffee Mug', 299)">Add to Cart</button>
+      </div>
+      
+      <div class="card">
+        <img src="store /hoodies.jpg" alt="MI Hoodie">
+        <h3>MI Hoodie</h3>
+        <p>₹1899 <br><br>Premium finish with golden highlights, a collector’s favorite</p>
+        <button onclick="addToCart('MI Hoodie', 1899)">Add to Cart</button>
+      </div>
+      <div class="card">
+        <img src="store /hodies.webp" alt="MI Hoodie">
+        <h3>MI Hoodie</h3>
+        <p>₹1499 <br><br>Premium hoodie with golden accents for elite MI fans.</p>
+        <button onclick="addToCart('MI Hoodie', 1899)">Add to Cart</button>
+      </div>
+      
+      <div class="card">
+        <img src="store /cap 2.jpeg" alt="MI Hoodie">
+        <h3>MI Cap</h3>
+        <p>₹149 <br><br>Signature MI blue with embroidered logo, perfect for everyday wear</p>
+        <button onclick="addToCart('MI cap', 1899)">Add to Cart</button>
+      </div>
+      <div class="card">
+        <img src="store /lower.jpg" alt="MI Hoodie">
+        <h3>MI Hoodie</h3>
+        <p>₹699 <br><br>Premium finish with golden highlights, a collector’s favorite</p>
+        <button onclick="addToCart('MI Lower', 1899)">Add to Cart</button>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- Cart -->
+  <section class="cart">
+    <h2>Your Shopping Cart</h2>
+    <ul class="cart-items" id="cartItems"></ul>
+    <div class="cart-total" id="cartTotal">Total: ₹0</div>
+    <div class="cart-buttons">
+      <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+      <button class="checkout-btn" onclick="checkout()">Checkout</button>
+    </div>
+  </section>
+  <section class="contact-section" id="contact">
+    <h1>CONTACT ME FOR ANY PROBLEM</h1>
+    <form action="https://formsubmit.co/ankitpatelrock9555@gmail.com" method="POST" class="contact-form">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://your-portfolio.com/thank-you.html">
+
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required placeholder="Your name">
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required placeholder="you@example.com">
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="6" required placeholder="Type your message..."></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Mumbai Indians Store. All Rights Reserved.</p>
+    <div class="socials">
+      <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("nav-links").classList.toggle("show");
+    }
+
+    let cart = [];
+
+    function addToCart(item, price) {
+      let existing = cart.find(c => c.item === item);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ item, price, qty: 1 });
+      }
+      renderCart();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      renderCart();
+    }
+
+    function increaseQty(index) {
+      cart[index].qty++;
+      renderCart();
+    }
+
+    function decreaseQty(index) {
+      if (cart[index].qty > 1) {
+        cart[index].qty--;
+      } else {
+        removeFromCart(index);
+      }
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      renderCart();
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert("Your cart is empty!");
+      } else {
+        alert("Thank you for shopping with Mumbai Indians Store! 🏏💙");
+        clearCart();
+      }
+    }
+
+    function renderCart() {
+      const cartItems = document.getElementById("cartItems");
+      cartItems.innerHTML = "";
+      let total = 0;
+
+      cart.forEach((c, index) => {
+        total += c.price * c.qty;
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${c.item} - ₹${c.price} × ${c.qty}
+          <div>
+            <button class="qty-btn" onclick="decreaseQty(${index})">-</button>
+            <button class="qty-btn" onclick="increaseQty(${index})">+</button>
+            <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+          </div>
+        `;
+        cartItems.appendChild(li);
+      });
+
+      document.getElementById("cartTotal").textContent = `Total: ₹${total}`;
+    }
+  </script>
+</body>
+</html>

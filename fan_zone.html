@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fan Zone - Mumbai Indians</title>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #004ba0;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    header h1 {
+      font-size: 2em;
+      margin-bottom: 5px;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    /* Card Styles */
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .card h2 {
+      margin-bottom: 15px;
+      color: #004ba0;
+    }
+
+    /* Poll */
+    .poll button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #007bff;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .poll button:hover {
+      background: #0056b3;
+    }
+
+    /* Quiz */
+    .quiz p {
+      margin-bottom: 10px;
+    }
+
+    .quiz button {
+      padding: 8px 15px;
+      background: #ff9800;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .quiz button:hover {
+      background: #e68900;
+    }
+
+    /* Wallpapers */
+    .wallpapers img {
+      width: 100%;
+      max-width: 200px;
+      margin: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .wallpapers img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Fan Shoutouts (card version inside grid) */
+    .fan-shoutouts .shoutout {
+      background: #f1f1f1;
+      padding: 12px;
+      margin: 10px 0;
+      border-left: 5px solid #004ba0;
+      border-radius: 6px;
+      color: #333;
+    }
+
+    /* Responsive Grid */
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Full Fan Wall Section */
+    .fan-wall {
+      background: #111;
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+      margin-top: 40px; /* spacing from cards */
+    }
+
+    .fan-wall h2 {
+      font-size: 2em;
+      margin-bottom: 15px;
+      color: #ffbb00;
+      text-transform: uppercase;
+    }
+
+    .fan-wall p {
+      margin-bottom: 25px;
+      font-size: 1.1em;
+      color: #ccc;
+    }
+
+    .upload-box {
+      margin-bottom: 30px;
+    }
+
+    .upload-box input {
+      margin-right: 10px;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    .upload-box button {
+      background: #ff4da6;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .upload-box button:hover {
+      background: #ff267a;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .fan-featured {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      width: 280px;
+      box-shadow: 0px 4px 15px rgba(255, 187, 0, 0.3);
+    }
+
+    .fan-featured img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .hashtag {
+      margin-top: 40px;
+      font-size: 1.2em;
+    }
+
+    .hashtag span {
+      color: #00c9ff;
+      font-weight: bold;
+    }
+    /* Footer */
+footer {
+  background: #00264d;
+  color: #fff;
+  padding: 40px 20px 20px;
+  margin-top: 50px;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-left {
+  flex: 1;
+  min-width: 250px;
+}
+
+.footer-left h3 {
+  margin-bottom: 10px;
+  color: #ffbb00;
+}
+
+.footer-links {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-links h4 {
+  margin-bottom: 10px;
+  color: #ffbb00;
+}
+
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links ul li {
+  margin: 6px 0;
+}
+
+.footer-links ul li a {
+  color: #ddd;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+  color: #ffbb00;
+}
+
+.footer-social {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-social h4 {
+  margin-bottom: 10px;
+  color: #ffbb00;
+}
+
+.footer-social a img {
+  width: 30px;
+  margin: 5px;
+  transition: transform 0.3s ease;
+}
+
+.footer-social a img:hover {
+  transform: scale(1.2);
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 10px;
+  font-size: 0.9em;
+  color: #ccc;
+}
+/* Contests Section */
+.contests {
+  background: linear-gradient(135deg, #004ba0, #007bff);
+  color: white;
+  text-align: center;
+}
+
+.contests h2 {
+  color: #ffdd00;
+  margin-bottom: 10px;
+}
+
+.contests p {
+  margin-bottom: 20px;
+}
+
+.contest-box {
+  background: white;
+  color: #333;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.contest-box:hover {
+  transform: translateY(-5px);
+}
+
+.contest-box h3 {
+  margin-bottom: 8px;
+  color: #004ba0;
+}
+
+.contest-box button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: #ff4da6;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.contest-box button:hover {
+  background: #e60073;
+}
+
+#contestResult {
+  margin-top: 15px;
+  font-weight: bold;
+  color: #ffeb3b;
+}
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎉 MI Fan Zone 🎉</h1>
+    <p>Welcome Paltan! Engage, Play & Celebrate Mumbai Indians</p>
+  </header>
+
+  <div class="container">
+    <!-- Poll -->
+    <div class="card poll">
+      <h2>Vote for Your Favorite Player 🏏</h2>
+      <button onclick="vote('Rohit Sharma')">Rohit Sharma</button>
+      <button onclick="vote('Hardik Pandya')">Hardik Pandya</button>
+      <button onclick="vote('Jasprit Bumrah')">Jasprit Bumrah</button>
+      <p id="voteResult"></p>
+    </div>
+
+    <!-- Quiz -->
+    <div class="card quiz">
+      <h2>MI Trivia Quiz 🧠</h2>
+      <p>Who was the captain of MI in their first IPL title win (2013)?</p>
+      <button onclick="checkAnswer('Rohit Sharma')">Rohit Sharma</button>
+      <button onclick="checkAnswer('Sachin Tendulkar')">Sachin Tendulkar</button>
+      <p id="quizResult"></p>
+    </div>
+
+    <!-- Wallpapers -->
+    <div class="card wallpapers">
+      <h2>Exclusive Wallpapers 🎨</h2>
+      <a href="wallpaper/images 4.jpeg" download><img src="wallpaper/images 4.jpeg" alt="Wallpaper 1"></a>
+      <a href="wallpaper/img 5.jpeg" download><img src="wallpaper/img 5.jpeg" alt="Wallpaper 2"></a>
+      <a href="wallpaper/img 6.jpeg" download><img src="wallpaper/img 6.jpeg" alt="Wallpaper 3"></a>
+      <a href="wallpaper/img 7.jpeg" download><img src="wallpaper/img 7.jpeg" alt="Wallpaper 4"></a>
+      <a href="wallpaper/wall 2.jpeg" download><img src="wallpaper/wall 2.jpeg" alt="Wallpaper 5"></a>
+      <a href="wallpaper/wall 3.jpeg" download><img src="wallpaper/wall 3.jpeg" alt="Wallpaper 6"></a>
+      <a href="wallpaper/wall-1.jpeg" download><img src="wallpaper/wall-1.jpeg" alt="Wallpaper 7"></a>
+    </div>
+
+    <!-- Fan Shoutouts Card -->
+    <div class="card fan-shoutouts">
+      <h2>Fan Shoutouts 📢</h2>
+      <div class="shoutout">"MI till I die! 💙" - Rahul, Mumbai</div>
+      <div class="shoutout">"Hardik is back, MI attack! 🔥" - Priya, Pune</div>
+      <div class="shoutout">"Bumrah’s yorkers = nightmares for batsmen!" - Aarav, Delhi</div>
+    </div>
+  </div>
+  
+  <!-- Full Fan Wall Section -->
+  <section class="fan-wall">
+    <h2>Fan Wall 🎉</h2>
+    <p>Show your passion for MI! Upload your photos in MI jersey and get featured here.</p>
+
+    <!-- Upload Form -->
+    <div class="upload-box">
+      <input type="file" id="fanUpload" accept="image/*,video/*">
+      <button onclick="uploadFanContent()">Upload</button>
+    </div>
+
+    <!-- Fan Gallery -->
+    <div class="gallery" id="fanGallery">
+      <!-- Fan of the Week -->
+      <div class="fan-featured">
+        <h3>⭐ Fan of the Week</h3>
+        <img src="1000100559-modified.png" alt="Fan of the Week">
+        <p>@MI_SuperFan</p>
+      </div>
+    </div>
+
+    <!-- Instagram Hashtag -->
+    <div class="hashtag">
+      <h3>📸 Follow & Tag <span>#MIPaltan</span> on Instagram!</h3>
+      <p>Your posts may appear here soon!</p>
+    </div>
+  </section>
+
+
+  <!-- Contests & Rewards -->
+<section class="card contests">
+  <h2>🎁 Contests & Rewards</h2>
+  <p>Participate in exciting contests and stand a chance to win exclusive MI goodies!</p>
+
+  <div class="contest-box">
+    <h3>👕 Jersey Giveaway Contest</h3>
+    <p>Answer MI trivia questions and win an official Mumbai Indians Jersey!</p>
+    <button onclick="joinContest('Jersey Giveaway')">Join Now</button>
+  </div>
+
+  <div class="contest-box">
+    <h3>😂 Best Meme of the Week</h3>
+    <p>Upload your funniest MI memes. The best one gets featured & rewarded!</p>
+    <button onclick="joinContest('Meme Contest')">Submit Meme</button>
+  </div>
+
+  <div id="contestResult"></div>
+</section>
+
+
+    <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-left">
+        <h3>🏏 Mumbai Indians Fan Zone</h3>
+        <p>Connecting fans worldwide — Celebrate, Cheer & Support MI together!</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="IPL_SITE.html">Home</a></li>
+          <li><a href="#">Team Info</a></li>
+          <li><a href="#">Fan Zone</a></li>
+          <li><a href="#">Gallery</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-social">
+        <h4>Follow Us</h4>
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"></a>
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"></a>
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670147.png" alt="YouTube"></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Mumbai Indians Fan Zone. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+
+  <script>
+    function vote(player) {
+      document.getElementById('voteResult').innerText = "You voted for " + player + "! ✅";
+    }
+
+    function checkAnswer(answer) {
+      if(answer === "Rohit Sharma") {
+        document.getElementById('quizResult').innerText = "🎉 Correct! Rohit Sharma led MI to victory in 2013.";
+      } else {
+        document.getElementById('quizResult').innerText = "❌ Oops! Try again.";
+      }
+    }
+
+    function uploadFanContent() {
+      const upload = document.getElementById("fanUpload").files[0];
+      const gallery = document.getElementById("fanGallery");
+
+      if (upload) {
+        const fileURL = URL.createObjectURL(upload);
+        const newItem = document.createElement("div");
+        newItem.classList.add("fan-featured");
+        newItem.innerHTML = `
+          <img src="${fileURL}" alt="Fan Upload">
+          <p>New Fan Upload 🚀</p>
+        `;
+        gallery.appendChild(newItem);
+      } else {
+        alert("Please select a file to upload!");
+      }
+    }
+  </script>
+</body>
+</html>

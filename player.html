@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mumbai Indians - Players Hub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6fa;
+      color: #333;
+    }
+
+    header {
+      background: #1a11c6;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    /* Search + Filter */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .filter-bar input, .filter-bar select {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    /* Player Grid */
+    .player-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+
+    /* Flip Card */
+    .card {
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 350px;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+    .card:hover .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      backface-visibility: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    .card-front {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .card-front img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      border: 3px solid #1a11c6;
+    }
+    .card-front h3 {
+      margin: 5px 0;
+      color: #1a11c6;
+    }
+    .card-front p {
+      font-size: 14px;
+    }
+    .card-back {
+      background: #1a11c6;
+      color: white;
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card-back h4 {
+      margin-bottom: 10px;
+    }
+    .card-back p {
+      margin: 4px 0;
+    }
+
+    /* Modal Popup */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      width: 80%;
+      max-width: 700px;
+      position: relative;
+      animation: fadeIn 0.5s ease;
+    }
+    .modal-content h2 {
+      color: #1a11c6;
+      margin-top: 0;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 22px;
+      cursor: pointer;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Animated Stats Bar */
+    .stats-bar {
+      margin: 8px 0;
+    }
+    .stats-bar span {
+      font-size: 14px;
+    }
+    .progress {
+      background: #eee;
+      border-radius: 6px;
+      overflow: hidden;
+      height: 10px;
+      margin-top: 4px;
+    }
+    .progress div {
+      height: 100%;
+      background: #1a11c6;
+      width: 0;
+      transition: width 1s ease;
+    }
+
+    /* Player of the Week */
+    .banner {
+      background: gold;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    /* Fan Poll */
+    .poll {
+      padding: 20px;
+      background: #fff;
+      text-align: center;
+      margin: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .poll button {
+      margin: 6px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      background: #1a11c6;
+      color: white;
+      cursor: pointer;
+    }
+    .footer {
+  background: #0a1a3a;
+  color: #fff;
+  padding: 40px 20px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-about, .footer-links, .footer-social {
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer h3, .footer h4 {
+  color: #00aaff;
+  margin-bottom: 15px;
+}
+
+.footer p {
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin: 8px 0;
+}
+
+.footer-links ul li a {
+  color: #fff;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #00aaff;
+}
+
+.footer-social a img {
+  width: 28px;
+  margin: 0 8px;
+  transition: transform 0.3s;
+}
+
+.footer-social a img:hover {
+  transform: scale(1.2);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding: 15px 0 0;
+  margin-top: 20px;
+  border-top: 1px solid #444;
+  font-size: 13px;
+}
+
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⚡ Mumbai Indians - Player Hub ⚡</h1>
+</header>
+
+<div class="banner">🌟 Player of the Week: Suryakumar Yadav 🌟</div>
+
+<!-- Search & Filter -->
+<div class="filter-bar">
+  <input type="text" id="search" placeholder="Search player...">
+  <select id="filter">
+    <option value="all">All Roles</option>
+    <option value="batsman">Batsman</option>
+    <option value="bowler">Bowler</option>
+    <option value="allrounder">All-Rounder</option>
+    <option value="wicketkeeper">Wicketkeeper</option>
+  </select>
+</div>
+
+<!-- Player Grid -->
+<div class="player-grid" id="playerGrid">
+  <!-- Card 1 -->
+  <div class="card" data-role="batsman" onclick="openModal('rohit')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/rohit sharma.jxl" alt="Rohit Sharma">
+        <h3>Rohit Sharma</h3>
+        <p>Batsman</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 243</p>
+        <p>Runs: 6200+</p>
+        <p>50s: 42 | 100s: 1</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="card" data-role="allrounder" onclick="openModal('hardik')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/hardik pandya .webp" alt="Hardik Pandya">
+        <h3>Hardik Pandya</h3>
+        <p>All-Rounder- Captain</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!--batsman-->
+  
+  <div class="card" data-role="batsman" onclick="openModal('surya')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/suryakumar .avif" alt="Hardik Pandya">
+        <h3>Surya Kumar Yadv</h3>
+        <p>Batsman <br>
+
+
+        </p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card" data-role="batsman" onclick="openModal('tilak')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/tilak.avif" alt="Hardik Pandya">
+        <h3>Tilak Verma</h3>
+        <p>Batsman</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="card" data-role="batsman" onclick="openModal('bevon')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/bevon jocbas.avif" alt="Hardik Pandya">
+        <h3>Bevon Jocabs</h3>
+        <p>Batsman</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="card" data-role="wicketkeeper" onclick="openModal('ryan')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/ryan.avif" alt="Hardik Pandya">
+        <h3>Ryan Rickelton</h3>
+        <p>Wicketkeeper</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="card" data-role="wicketkeeper" onclick="openModal('robin')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/robin minz.avif" alt="Hardik Pandya">
+        <h3>Robin Minz</h3>
+        <p>Wicketkeeper</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card" data-role="wicketkeeper" onclick="openModal('krishnan')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/krishnan .avif" alt="Hardik Pandya">
+        <h3>Krishnan Shrijith</h3>
+        <p>Wicketkeeper</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card" data-role="allrounder" onclick="openModal('naman')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/naman Dhir .avif" alt="Hardik Pandya">
+        <h3>Naman Dhir</h3>
+        <p>All-Rounder</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card" data-role="allrounder" onclick="openModal('will')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/will jacks.avif" alt="Hardik Pandya">
+        <h3>Will Jacks</h3>
+        <p>All-Rounder</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  <!--Bowler-->
+  <div class="card" data-role="bowler" onclick="openModal('jasprit')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/jasprit .avif" alt="Hardik Pandya">
+        <h3>Jasprit Bumarh</h3>
+        <p>Bowler</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="card" data-role="bowler" onclick="openModal('deepak')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/deepak chahar .avif" alt="Hardik Pandya">
+        <h3>Deepak Chahar</h3>
+        <p>Bowler</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card" data-role="bowler" onclick="openModal('karn')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/karn sharma .avif" alt="Hardik Pandya">
+        <h3>Karn Sharma</h3>
+        <p>Spinner</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card" data-role="bowler" onclick="openModal('vignesh')">
+    <div class="card-inner">
+      <div class="card-front">
+        <img src="player imag/vignesh.avif" alt="Hardik Pandya">
+        <h3>Vignesh Puthur</h3>
+        <p>spinner</p>
+      </div>
+      <div class="card-back">
+        <h4>Quick Stats</h4>
+        <p>Matches: 120</p>
+        <p>Runs: 2300+</p>
+        <p>Wickets: 50+</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="playerModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h2 id="playerName"></h2>
+    <p id="playerBio"></p>
+
+    <h3>Career Highlights</h3>
+    <ul id="highlights"></ul>
+
+    <h3>Achievements</h3>
+    <ul id="achievements"></ul>
+
+    <h3>Stats Progress</h3>
+    <div class="stats-bar">
+      <span>Runs</span>
+      <div class="progress"><div id="runsBar"></div></div>
+    </div>
+    <div class="stats-bar">
+      <span>Wickets</span>
+      <div class="progress"><div id="wicketsBar"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Fan Poll -->
+<div class="poll">
+  <h2>Who’s your favorite MI player?</h2>
+  <button onclick="vote('Rohit Sharma')">Rohit Sharma</button>
+  <button onclick="vote('Hardik Pandya')">Hardik Pandya</button>
+  <button onclick="vote('Suryakumar Yadav')">Suryakumar Yadav</button>
+  <p id="pollResult"></p>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <!-- About Section -->
+    <div class="footer-about">
+      <h3>Mumbai Indians Fan Hub</h3>
+      <p>Connecting MI Paltan with live updates, match highlights, player stats, and fan activities. 💙</p>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#players">Players</a></li>
+        <li><a href="#schedule">Schedule</a></li>
+        <li><a href="#stats">Statistics</a></li>
+        <li><a href="#fans">Fan Zone</a></li>
+      </ul>
+    </div>
+
+    <!-- Social Media -->
+    <div class="footer-social">
+      <h4>Follow Us</h4>
+      <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+      <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"></a>
+      <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"></a>
+      <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670147.png" alt="YouTube"></a>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <p>© 2025 Mumbai Indians Fan Hub | Made with 💙 by Paltan Fans</p>
+  </div>
+</footer>
+
+
+<script>
+  // Search & Filter
+  const search = document.getElementById("search");
+  const filter = document.getElementById("filter");
+  const playerGrid = document.getElementById("playerGrid").children;
+
+  search.addEventListener("input", filterPlayers);
+  filter.addEventListener("change", filterPlayers);
+
+  function filterPlayers() {
+    let text = search.value.toLowerCase();
+    let role = filter.value;
+
+    for (let card of playerGrid) {
+      let name = card.querySelector("h3").innerText.toLowerCase();
+      let cardRole = card.getAttribute("data-role");
+
+      if ((name.includes(text)) && (role === "all" || role === cardRole)) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    }
+  }
+
+  // Modal Data
+  const playerData = {
+    rohit: {
+      name: "Rohit Sharma",
+      bio: "Captain of Mumbai Indians, explosive opener known as 'Hitman'.",
+      highlights: ["5 IPL Titles", "Highest individual ODI score (264)", "Fastest T20I century by Indian"],
+      achievements: ["Most IPL titles as captain", "2019 WC Leading run scorer"],
+      runs: 85,
+      wickets: 10
+    },
+    hardik: {
+      name: "Hardik Pandya",
+      bio: "All-rounder known for power hitting and match-winning spells.",
+      highlights: ["2017 Champions Trophy heroics", "MI title-winning knocks"],
+      achievements: ["Fastest IPL 50 (17 balls)", "Best All-rounder tag for MI"],
+      runs: 70,
+      wickets: 40
+    },
+    surya: {
+        name: "Suryakumar Yadav",
+        bio: "Mr. 360° of cricket, famous for his innovative T20 shots.",
+        highlights: ["T20I No.1 Ranked Batsman", "Explosive IPL knocks"],
+        achievements: ["Most 6s for MI in 2023", "Fastest 50 for MI"],
+        runs: 3500,
+        wickets: 0
+    },
+    tilak: {
+    name: "Tilak Varma",
+    bio: "Young left-handed batsman, consistent and stylish middle-order player.",
+    highlights: ["Impressive IPL 2022 debut season", "Match-winning innings under pressure"],
+    achievements: ["Emerging Player contender", "Future star for MI"],
+    runs: 740,
+    wickets: 0
+  },
+    bevon: {
+    name: "Bevon Jacobs",
+    bio: "Young batting talent in the Mumbai Indians squad, known for his fearless stroke play.",
+    highlights: ["Domestic performances in T20 tournaments", "Picked by MI in IPL 2025 auctions"],
+    achievements: ["Upcoming talent", "Future prospect for MI middle order"],
+    runs: 0,   // update when stats available
+    wickets: 0
+  },
+    ryan: {
+    name: "Ryan Rickelton",
+    bio: "Explosive South African wicketkeeper-batsman, known for his aggressive batting in T20 leagues.",
+    highlights: ["Consistent scorer in SA T20 league", "Signed by Mumbai Indians for IPL 2025"],
+    achievements: ["Rising international star", "Big-hitting top-order batter"],
+    runs: 1500,   // placeholder, update with IPL stats
+    wickets: 0
+  },
+    robin: {
+    name: "Robin Minz",
+    bio: "Young wicketkeeper-batsman from Jharkhand, known as the 'Jharkhand Dynamite' for his explosive hitting.",
+    highlights: ["First tribal cricketer to enter IPL", "Signed by Mumbai Indians in 2025"],
+    achievements: ["Emerging wicketkeeper-batsman", "Power-hitter in domestic cricket"],
+    runs: 800,   // placeholder, will update as career grows
+    wickets: 0
+  },
+    krishnan: {
+    name: "Krishnan Shrijith",
+    bio: "Promising wicketkeeper-batsman from Tamil Nadu with consistent domestic performances.",
+    highlights: ["Strong performances in TNPL", "Picked by Mumbai Indians in 2025"],
+    achievements: ["Reliable finisher", "Upcoming wicketkeeper talent"],
+    runs: 1200,   // placeholder, update with real stats later
+    wickets: 0
+  },
+    naman: {
+    name: "Naman Dhir",
+    bio: "Young aggressive top-order batsman with a fearless approach in T20s.",
+    highlights: ["Impressive debut for MI in 2024", "Known for clean hitting in domestic cricket"],
+    achievements: ["Consistent striker in Syed Mushtaq Ali Trophy", "Promising future star for MI"],
+    runs: 800,   // placeholder stats
+    wickets: 0
+  },
+    will: {
+    name: "Will Jacks",
+    bio: "Explosive England batter and handy off-spinner, known for power-hitting in T20s.",
+    highlights: ["Blazing T20 knocks for England", "Match-winning spells in franchise leagues"],
+    achievements: ["Fastest hundred in England domestic T20 (25 balls)", "Rising overseas star for MI"],
+    runs: 1500,   // placeholder stats
+    wickets: 25
+  },
+    bumrah: {
+    name: "Jasprit Bumrah",
+    bio: "World-class fast bowler, renowned for deadly yorkers and consistency at the death overs.",
+    highlights: ["Key bowler in MI’s 5 IPL titles", "Match-winning spells for India in ICC events"],
+    achievements: ["No.1 ICC ODI Bowler (2018)", "Fastest Indian pacer to 100 ODI wickets"],
+    runs: 150,   // tailender contributions
+    wickets: 150  // IPL + T20 career wickets placeholder
+  },
+    deepak: {
+    name: "Deepak Chahar",
+    bio: "Swing bowler who can strike early with the new ball and contribute handy runs down the order.",
+    highlights: ["Best bowling figures in T20Is (6/7 vs Bangladesh)", "Powerplay wicket specialist"],
+    achievements: ["Hat-trick in T20I cricket", "Consistent IPL wicket-taker"],
+    runs: 300,  
+    wickets: 80
+  },
+    karn: {
+    name: "Karn Sharma",
+    bio: "Experienced leg-spinner with IPL success across different franchises, known for his wicket-taking ability in the middle overs.",
+    highlights: ["Part of multiple IPL-winning teams", "Key middle-over spinner"],
+    achievements: ["Won IPL titles with CSK, SRH, and MI", "Valuable T20 spinner"],
+    runs: 400,
+    wickets: 60
+  },
+  vignesh: {
+    name: "Vignesh puthur",
+    bio: "A young and developing left-arm wrist spinner known for his potential to trouble batters with his variations.",
+    highlights: ["Made an impressive IPL debut for Mumbai Indians","Part of the Mumbai Indians squad for IPL 2025."],
+    achievements: ["Showcased his talent with a notable performance on debut, taking key wickets.", "Secured an IPL contract after strong domestic T20 performances."],
+    runs: 0,
+    wickets: 6
+    
+  }
+
+
+
+
+
+
+
+
+
+
+   
+  };
+
+  function openModal(player) {
+    const modal = document.getElementById("playerModal");
+    modal.style.display = "flex";
+
+    let data = playerData[player];
+    document.getElementById("playerName").innerText = data.name;
+    document.getElementById("playerBio").innerText = data.bio;
+
+    let highlightsList = document.getElementById("highlights");
+    highlightsList.innerHTML = "";
+    data.highlights.forEach(h => {
+      let li = document.createElement("li");
+      li.innerText = h;
+      highlightsList.appendChild(li);
+    });
+
+    let achievementsList = document.getElementById("achievements");
+    achievementsList.innerHTML = "";
+    data.achievements.forEach(a => {
+      let li = document.createElement("li");
+      li.innerText = a;
+      achievementsList.appendChild(li);
+    });
+
+    // Animate progress bars
+    document.getElementById("runsBar").style.width = data.runs + "%";
+    document.getElementById("wicketsBar").style.width = data.wickets + "%";
+  }
+
+  function closeModal() {
+    document.getElementById("playerModal").style.display = "none";
+  }
+
+  // Fan Poll
+  function vote(player) {
+    document.getElementById("pollResult").innerText = `You voted for ${player}! 🎉`;
+  }
+</script>
+
+</body>
+</html>
